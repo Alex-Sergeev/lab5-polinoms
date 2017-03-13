@@ -254,27 +254,12 @@ TPolinom::TPolinom(string str)
 TPolinom::~TPolinom()
 {
 	TLink *tmp = this->pFirst;
-	tmp = tmp->pNext;
-	int count = 1;
-	while (tmp->monom.degree != -1)
-	{
-		tmp = tmp->pNext;
-		count++;
-	}
-	for (int i = count; i > 0; i--)
-	{
-		TLink *temp = this->pFirst;
-		for (int j = 0; j < i; j++)
-		{
-			temp = temp->pNext;
-		}
-		delete temp;
-	}
-
+	delete tmp;
 }
 
 void TPolinom::SortByMaxDegree()
 {
+	return;
 	int max = -1;
 	int start = 1;
 	TLink* prePointer;
@@ -354,33 +339,66 @@ void TPolinom::ShowPolinom()
 	{
 		tmp = tmp->pNext;
 		if (tmp->monom.coef != 1)
-			cout << tmp->monom.coef;
+			cout << tmp->monom.coef << " ";
 		if (tmp->monom.degree / (maxDegree*maxDegree) > 0)
 		{
-			cout << "x";
+			cout << "x ";
 			if (tmp->monom.degree / (maxDegree*maxDegree) > 1)
-				cout << "^" << tmp->monom.degree / (maxDegree*maxDegree);
+				cout << "^ " << tmp->monom.degree / (maxDegree*maxDegree) << " ";
 		}
 		if (tmp->monom.degree / maxDegree % maxDegree > 0)
 		{
-			cout << "y";
+			cout << "y ";
 			if (tmp->monom.degree / maxDegree % maxDegree > 1)
-				cout << "^" << tmp->monom.degree / maxDegree % maxDegree;
+				cout << "^ " << tmp->monom.degree / maxDegree % maxDegree<<" ";
 		}
 		if (tmp->monom.degree % maxDegree > 0)
 		{
-			cout << "z";
+			cout << "z ";
 			if (tmp->monom.degree % maxDegree > 1)
-				cout << "^" << tmp->monom.degree % maxDegree;
+				cout << "^ " << tmp->monom.degree % maxDegree << " ";
 		}
-		if (i != count - 2)
-			cout << " + ";
+		if (i != count - 1)
+			cout << "+ ";
 	}
+	cout << endl;
 }
 
 int TPolinom::Calculate(int x, int y, int z)
 {
-	return 0;
+	TLink *tmp = this->pFirst;
+	int count = 0;
+	int res = 0;
+	int tmpint;
+	tmp = tmp->pNext;
+	while (tmp->monom.degree != -1)
+	{
+		tmp = tmp->pNext;
+		count = tmp->monom.coef;
+		tmpint = 1;
+		if (tmp->monom.degree / (maxDegree*maxDegree) != 0)
+		{
+			for (int i = 0; i < (tmp->monom.degree / (maxDegree*maxDegree)); i++)
+				tmpint *= x;
+			count *= tmpint;
+		}
+		tmpint = 1;
+		if (tmp->monom.degree / (maxDegree*maxDegree) != 0)
+		{
+			for (int i = 0; i < (tmp->monom.degree / maxDegree % maxDegree); i++)
+				tmpint *= y;
+			count *= tmpint;
+		}
+		tmpint = 1;
+		if (tmp->monom.degree / (maxDegree*maxDegree) != 0)
+		{
+			for (int i = 0; i < (tmp->monom.degree % maxDegree); i++)
+				tmpint *= z;
+			count *= tmpint;
+		}
+		res += count;
+	}
+	return res;
 }
 
 TPolinom TPolinom::Differentiate(double difVar)

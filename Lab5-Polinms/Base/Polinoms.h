@@ -15,6 +15,10 @@ struct TLink
 {
 	TMonom monom;
 	TLink* pNext;
+	~TLink()
+	{
+// Тут типо удаляет
+	}
 };
 
 class TPolinom
@@ -28,11 +32,14 @@ public:
 	TPolinom(string str);
 	~TPolinom();
 
-	void SetMaxDegree(int var)
+	void SetMaxDegree(unsigned int var)
 	{
 		if (var > 10000)
-			throw(0);
-		maxDegree = var;
+			throw("Слишком большая степень");
+		if ((var == 10) || (var == 100) || (var == 1000))
+			maxDegree = var;
+		else
+			throw("Степень должна быть кратна 10");
 	}
 	void SortByMaxDegree();
 	TPolinom operator+(const TPolinom &polinom);

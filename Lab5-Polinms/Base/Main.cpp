@@ -8,16 +8,26 @@ int main()
 {
 	setlocale(LC_ALL, "Russian");
 	string str;
-	int degree;
+	unsigned int degree;
+	int x, y, z;
+	cout << "Введите максимальную степень переменной" << endl;
 	cin >> degree;
+	cout << "Введите полином" << endl;
 	cin >> str;
 	try
 	{
 		TPolinom tmp;
 		tmp.SetMaxDegree(degree);
 		TPolinom Polinom(str);
-		Polinom.SetMaxDegree(degree);
+		cout << "Введённый полином:" << endl;
 		Polinom.ShowPolinom();
+		cout << "Введите x" << endl;
+		cin >> x;
+		cout << "Введите y" << endl;
+		cin >> y;
+		cout << "Введите z" << endl;
+		cin >> z;
+		cout << "Ответ:" << Polinom.Calculate(x, y, z) << endl;
 	}
 	catch (char* ch)
 	{

@@ -17,7 +17,23 @@ struct TLink
 	TLink* pNext;
 	~TLink()
 	{
-// Тут типо удаляет
+		/*TLink *tmp = this;
+		tmp = tmp->pNext;
+		int count = 1;
+		while (tmp->monom.degree != -1)
+		{
+			tmp = tmp->pNext;
+			count++;
+		}
+		for (int i = count; i > 0; i--)
+		{
+			TLink *temp = this;
+			for (int j = 0; j < i; j++)
+			{
+				temp = temp->pNext;
+			}
+			delete temp;
+		}*/
 	}
 };
 
@@ -45,9 +61,10 @@ public:
 	TPolinom operator+(const TPolinom &polinom);
 	TPolinom operator*(int var);
 	void ShowPolinom();
+	string PolinomToString();
 	int Calculate(int x, int y, int z);           // решение полинома по введённым числам
-	TPolinom Differentiate(double difVar);         // дифферинцирование
-	TPolinom Integrate(double integrVar);          // интегрирование
+	TPolinom Differentiate(int difVar);         // дифферинцирование
+	TPolinom Integrate(int integrVar);          // интегрирование
 };
 
 #endif

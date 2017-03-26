@@ -335,31 +335,33 @@ void TPolinom::ShowPolinom()
 		count++;
 	}
 	tmp = this->pFirst;
+	tmp = tmp->pNext;
 	for (int i = 0; i < count; i++)
 	{
-		tmp = tmp->pNext;
 		if (tmp->monom.coef != 1)
-			cout << tmp->monom.coef << " ";
+			cout << tmp->monom.coef;
 		if (tmp->monom.degree / (maxDegree*maxDegree) > 0)
 		{
-			cout << "x ";
+			cout << "x";
 			if (tmp->monom.degree / (maxDegree*maxDegree) > 1)
-				cout << "^ " << tmp->monom.degree / (maxDegree*maxDegree) << " ";
+				cout << "^" << tmp->monom.degree / (maxDegree*maxDegree);
 		}
 		if (tmp->monom.degree / maxDegree % maxDegree > 0)
 		{
-			cout << "y ";
+			cout << "y";
 			if (tmp->monom.degree / maxDegree % maxDegree > 1)
-				cout << "^ " << tmp->monom.degree / maxDegree % maxDegree<<" ";
+				cout << "^" << tmp->monom.degree / maxDegree % maxDegree;
 		}
 		if (tmp->monom.degree % maxDegree > 0)
 		{
-			cout << "z ";
+			cout << "z";
 			if (tmp->monom.degree % maxDegree > 1)
-				cout << "^ " << tmp->monom.degree % maxDegree << " ";
+				cout << "^" << tmp->monom.degree % maxDegree;
 		}
-		if (i != count - 1)
-			cout << "+ ";
+		tmp = tmp->pNext;
+		if (tmp->monom.coef != 0)
+			if (tmp->monom.coef > 0)
+				cout << "+";
 	}
 	cout << endl;
 }
@@ -373,7 +375,6 @@ int TPolinom::Calculate(int x, int y, int z)
 	tmp = tmp->pNext;
 	while (tmp->monom.degree != -1)
 	{
-		tmp = tmp->pNext;
 		count = tmp->monom.coef;
 		tmpint = 1;
 		if (tmp->monom.degree / (maxDegree*maxDegree) != 0)
@@ -383,36 +384,164 @@ int TPolinom::Calculate(int x, int y, int z)
 			count *= tmpint;
 		}
 		tmpint = 1;
-		if (tmp->monom.degree / (maxDegree*maxDegree) != 0)
+		if ((tmp->monom.degree / maxDegree) % maxDegree != 0)
 		{
 			for (int i = 0; i < (tmp->monom.degree / maxDegree % maxDegree); i++)
 				tmpint *= y;
 			count *= tmpint;
 		}
 		tmpint = 1;
-		if (tmp->monom.degree / (maxDegree*maxDegree) != 0)
+		if (tmp->monom.degree % maxDegree != 0)
 		{
 			for (int i = 0; i < (tmp->monom.degree % maxDegree); i++)
 				tmpint *= z;
 			count *= tmpint;
 		}
 		res += count;
+		tmp = tmp->pNext;
 	}
 	return res;
 }
 
-TPolinom TPolinom::Differentiate(double difVar)
+TPolinom TPolinom::Differentiate(int difVar)
 {
-	TPolinom tmp;
-
-
-	return tmp;;
+	TPolinom result;
+	TLink *tmp = this->pFirst;
+	tmp = tmp->pNext;
+	TLink *currentPartOfLink = result.pFirst;
+	while (tmp->monom.degree != -1)
+	{
+		tmp = tmp->pNext;
+		if (difVar == 1)
+		{
+			if ((tmp->monom.degree / (maxDegree*maxDegree) - 1) >= 0)
+			{
+				currentPartOfLink->pNext = new TLink;
+				currentPartOfLink->monom.degree = tmp->monom.degree;
+				currentPartOfLink->monom.degree -= 1*maxDegree*maxDegree;
+				currentPartOfLink->monom.coef = tmp->monom.coef*(tmp->monom.degree / (maxDegree*maxDegree));
+			}
+			else
+				continue;
+		}
+		if (difVar == 2)
+		{
+			if (((tmp->monom.degree / maxDegree % maxDegree) - 1) >= 0)
+			{
+				currentPartOfLink->pNext = new TLink;
+				currentPartOfLink->monom.degree = tmp->monom.degree;
+				currentPartOfLink->monom.degree -= 1 * maxDegree;
+				currentPartOfLink->monom.coef = tmp->monom.coef*(tmp->monom.degree / maxDegree % maxDegree);
+			}
+			else
+				continue;
+		}
+		if (difVar == 3)
+		{
+			if ((tmp->monom.degree % maxDegree - 1) >= 0)
+			{
+				currentPartOfLink->pNext = new TLink;
+				currentPartOfLink->monom.degree = tmp->monom.degree;
+				currentPartOfLink->monom.degree--;
+				currentPartOfLink->monom.coef = tmp->monom.coef*(tmp->monom.degree % maxDegree);
+			}
+			else
+				continue;
+		}
+	}
+	return result;
 }
 
-TPolinom TPolinom::Integrate(double integrVar)
+TPolinom TPolinom::Integrate(int integrVar)
 {
-	TPolinom tmp;
+	TPolinom result;
+	TLink *tmp = this->pFirst;
+	tmp = tmp->pNext;
+	TLink *currentPartOfLink = result.pFirst;
+	while (tmp->monom.degree != -1)
+	{
+		tmp = tmp->pNext;
+		if (integrVar == 1)
+		{
+			if ((tmp->monom.degree / (maxDegree*maxDegree))+1 == maxDegree)
+			{
+				cout << "Невозможно проинтегрировать слишком большая степень в результате" << endl;
+				return 0;
+			}
+				currentPartOfLink->pNext = new TLink;
+				currentPartOfLink->monom.degree = tmp->monom.degree;
+				currentPartOfLink->monom.degree += 1 * maxDegree*maxDegree;
+				currentPartOfLink->monom.coef = tmp->monom.coef / ((tmp->monom.degree / (maxDegree*maxDegree)) + 1);
+		}
+		if (integrVar == 2)
+		{
+			if ((tmp->monom.degree / maxDegree % maxDegree)+1 == maxDegree)
+			{
+				cout << "Невозможно проинтегрировать слишком большая степень в результате" << endl;
+				return 0;
+			}
+				currentPartOfLink->pNext = new TLink;
+				currentPartOfLink->monom.degree = tmp->monom.degree;
+				currentPartOfLink->monom.degree += 1 * maxDegree;
+				currentPartOfLink->monom.coef = tmp->monom.coef / ((tmp->monom.degree / maxDegree % maxDegree) + 1);
 
+		}
+		if (integrVar == 3)
+		{
+			if ((tmp->monom.degree % maxDegree) + 1 == maxDegree)
+			{
+				cout << "Невозможно проинтегрировать слишком большая степень в результате" << endl;
+				return 0;
+			}
+				currentPartOfLink->pNext = new TLink;
+				currentPartOfLink->monom.degree = tmp->monom.degree;
+				currentPartOfLink->monom.degree++;
+				currentPartOfLink->monom.coef = tmp->monom.coef / ((tmp->monom.degree % maxDegree) + 1);
+		}
+	}
+	return result;
+}
 
-	return tmp;;
+string TPolinom::PolinomToString()
+{
+	string str;
+	TLink *tmp = this->pFirst;
+	int count = 0;
+	tmp = tmp->pNext;
+	while (tmp->monom.degree != -1)
+	{
+		tmp = tmp->pNext;
+		count++;
+	}
+	tmp = this->pFirst;
+	tmp = tmp->pNext;
+	for (int i = 0; i < count; i++)
+	{
+		if (tmp->monom.coef != 1)
+			str+=tmp->monom.coef;
+		if (tmp->monom.degree / (maxDegree*maxDegree) > 0)
+		{
+			str += "x";
+			if (tmp->monom.degree / (maxDegree*maxDegree) > 1)
+				str+=+tmp->monom.degree / (maxDegree*maxDegree);
+		}
+		if (tmp->monom.degree / maxDegree % maxDegree > 0)
+		{
+			str += "y";
+			if (tmp->monom.degree / maxDegree % maxDegree > 1)
+				str+=(tmp->monom.degree / maxDegree % maxDegree);
+		}
+		if (tmp->monom.degree % maxDegree > 0)
+		{
+			str += "z";
+			if (tmp->monom.degree % maxDegree > 1)
+				str+=tmp->monom.degree % maxDegree;
+		}
+		tmp = tmp->pNext;
+		if (tmp->monom.coef != 0)
+			if (tmp->monom.coef > 0)
+				str+="+";
+	}
+
+	return str;
 }

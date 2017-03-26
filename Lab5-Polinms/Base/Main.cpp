@@ -28,6 +28,8 @@ int main()
 		cout << "Введите z" << endl;
 		cin >> z;
 		cout << "Ответ:" << Polinom.Calculate(x, y, z) << endl;
+		string tmpstring= Polinom.PolinomToString();
+		cout << tmpstring;
 	}
 	catch (char* ch)
 	{

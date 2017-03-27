@@ -15,32 +15,15 @@ struct TLink
 {
 	TMonom monom;
 	TLink* pNext;
-	~TLink()
-	{
-		/*TLink *tmp = this;
-		tmp = tmp->pNext;
-		int count = 1;
-		while (tmp->monom.degree != -1)
-		{
-			tmp = tmp->pNext;
-			count++;
-		}
-		for (int i = count; i > 0; i--)
-		{
-			TLink *temp = this;
-			for (int j = 0; j < i; j++)
-			{
-				temp = temp->pNext;
-			}
-			delete temp;
-		}*/
-	}
 };
 
 class TPolinom
 {
 	TLink* pFirst;
 	static int maxDegree;
+	int elemCount;
+
+	void SortByMaxDegree();
 
 public:
 	TPolinom();
@@ -48,7 +31,7 @@ public:
 	TPolinom(string str);
 	~TPolinom();
 
-	void SetMaxDegree(unsigned int var)
+	static void SetMaxDegree(unsigned int var)
 	{
 		if (var > 10000)
 			throw("Слишком большая степень");
@@ -57,7 +40,6 @@ public:
 		else
 			throw("Степень должна быть кратна 10");
 	}
-	void SortByMaxDegree();
 	TPolinom operator+(const TPolinom &polinom);
 	TPolinom operator*(int var);
 	void ShowPolinom();

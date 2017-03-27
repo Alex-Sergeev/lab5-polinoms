@@ -16,8 +16,7 @@ int main()
 	cin >> str;
 	try
 	{
-		TPolinom tmp;
-		tmp.SetMaxDegree(degree);
+		TPolinom::SetMaxDegree(degree);
 		TPolinom Polinom(str);
 		cout << "Введённый полином:" << endl;
 		Polinom.ShowPolinom();
@@ -28,8 +27,18 @@ int main()
 		cout << "Введите z" << endl;
 		cin >> z;
 		cout << "Ответ:" << Polinom.Calculate(x, y, z) << endl;
-		string tmpstring= Polinom.PolinomToString();
-		cout << tmpstring;
+		string tmpstring = Polinom.PolinomToString();
+		cout << tmpstring << endl;
+		TPolinom Pol;
+		Pol = Polinom.Differentiate(1);
+		tmpstring = Pol.PolinomToString();
+		Pol.ShowPolinom();
+		cout << tmpstring << endl;
+		TPolinom Pol1;
+		Pol1 = Polinom.Integrate(1);
+		Pol1.ShowPolinom();
+		tmpstring = Pol1.PolinomToString();
+		cout << tmpstring << endl;
 	}
 	catch (char* ch)
 	{

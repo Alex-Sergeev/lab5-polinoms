@@ -1,4 +1,7 @@
 ﻿#include "Polinoms.h"
+#include <string>
+
+using namespace std;
 
 int PartOfStringToInt(string str, int& pos)
 {
@@ -30,6 +33,7 @@ TPolinom::TPolinom()
 	this->pFirst->monom.coef = 0;
 	this->pFirst->monom.degree = -1;
 	this->pFirst->pNext = pFirst;
+	this->elemCount = 0;
 }
 
 TPolinom::TPolinom(char* strch)
@@ -51,6 +55,7 @@ TPolinom::TPolinom(char* strch)
 	linkStart->monom.coef = 0;
 	TLink* currentPartOfLink = linkStart;
 	i = 0;
+	elemCount = 0;
 	while (i < size)
 	{
 		j = i;
@@ -136,6 +141,7 @@ TPolinom::TPolinom(char* strch)
 		if (j != tmpstr.size())
 			throw"Ошибка ввода полинома: Неправильная запись монома 4";
 		i += j;
+		elemCount++;
 	}
 	currentPartOfLink->pNext = linkStart;
 	this->pFirst = linkStart;
@@ -160,6 +166,7 @@ TPolinom::TPolinom(string str)
 	linkStart->monom.coef = 0;
 	TLink* currentPartOfLink = linkStart;
 	i = 0;
+	elemCount = 0;
 	while (i < size)
 	{
 		j = i;
@@ -245,6 +252,7 @@ TPolinom::TPolinom(string str)
 		if (j != tmpstr.size())
 			throw"Ошибка ввода полинома: Неправильная запись монома 4";
 		i += j;
+		elemCount++;
 	}
 	currentPartOfLink->pNext = linkStart;
 	this->pFirst = linkStart;
@@ -254,6 +262,14 @@ TPolinom::TPolinom(string str)
 TPolinom::~TPolinom()
 {
 	TLink *tmp = this->pFirst;
+	tmp = tmp->pNext;
+	TLink *tmpDel;
+	while (tmp->monom.degree != -1)
+	{
+		tmpDel = tmp;
+		tmp = tmp->pNext;
+		delete tmpDel;
+	}
 	delete tmp;
 }
 
@@ -411,44 +427,42 @@ TPolinom TPolinom::Differentiate(int difVar)
 	TLink *currentPartOfLink = result.pFirst;
 	while (tmp->monom.degree != -1)
 	{
-		tmp = tmp->pNext;
 		if (difVar == 1)
 		{
 			if ((tmp->monom.degree / (maxDegree*maxDegree) - 1) >= 0)
 			{
 				currentPartOfLink->pNext = new TLink;
+				currentPartOfLink = currentPartOfLink->pNext;
 				currentPartOfLink->monom.degree = tmp->monom.degree;
 				currentPartOfLink->monom.degree -= 1*maxDegree*maxDegree;
 				currentPartOfLink->monom.coef = tmp->monom.coef*(tmp->monom.degree / (maxDegree*maxDegree));
 			}
-			else
-				continue;
 		}
 		if (difVar == 2)
 		{
 			if (((tmp->monom.degree / maxDegree % maxDegree) - 1) >= 0)
 			{
 				currentPartOfLink->pNext = new TLink;
+				currentPartOfLink = currentPartOfLink->pNext;
 				currentPartOfLink->monom.degree = tmp->monom.degree;
 				currentPartOfLink->monom.degree -= 1 * maxDegree;
 				currentPartOfLink->monom.coef = tmp->monom.coef*(tmp->monom.degree / maxDegree % maxDegree);
 			}
-			else
-				continue;
 		}
 		if (difVar == 3)
 		{
 			if ((tmp->monom.degree % maxDegree - 1) >= 0)
 			{
 				currentPartOfLink->pNext = new TLink;
+				currentPartOfLink = currentPartOfLink->pNext;
 				currentPartOfLink->monom.degree = tmp->monom.degree;
 				currentPartOfLink->monom.degree--;
 				currentPartOfLink->monom.coef = tmp->monom.coef*(tmp->monom.degree % maxDegree);
 			}
-			else
-				continue;
 		}
+		tmp = tmp->pNext;
 	}
+	currentPartOfLink->pNext = result.pFirst;
 	return result;
 }
 
@@ -460,7 +474,6 @@ TPolinom TPolinom::Integrate(int integrVar)
 	TLink *currentPartOfLink = result.pFirst;
 	while (tmp->monom.degree != -1)
 	{
-		tmp = tmp->pNext;
 		if (integrVar == 1)
 		{
 			if ((tmp->monom.degree / (maxDegree*maxDegree))+1 == maxDegree)
@@ -469,6 +482,7 @@ TPolinom TPolinom::Integrate(int integrVar)
 				return 0;
 			}
 				currentPartOfLink->pNext = new TLink;
+				currentPartOfLink = currentPartOfLink->pNext;
 				currentPartOfLink->monom.degree = tmp->monom.degree;
 				currentPartOfLink->monom.degree += 1 * maxDegree*maxDegree;
 				currentPartOfLink->monom.coef = tmp->monom.coef / ((tmp->monom.degree / (maxDegree*maxDegree)) + 1);
@@ -481,6 +495,7 @@ TPolinom TPolinom::Integrate(int integrVar)
 				return 0;
 			}
 				currentPartOfLink->pNext = new TLink;
+				currentPartOfLink = currentPartOfLink->pNext;
 				currentPartOfLink->monom.degree = tmp->monom.degree;
 				currentPartOfLink->monom.degree += 1 * maxDegree;
 				currentPartOfLink->monom.coef = tmp->monom.coef / ((tmp->monom.degree / maxDegree % maxDegree) + 1);
@@ -494,11 +509,14 @@ TPolinom TPolinom::Integrate(int integrVar)
 				return 0;
 			}
 				currentPartOfLink->pNext = new TLink;
+				currentPartOfLink = currentPartOfLink->pNext;
 				currentPartOfLink->monom.degree = tmp->monom.degree;
 				currentPartOfLink->monom.degree++;
 				currentPartOfLink->monom.coef = tmp->monom.coef / ((tmp->monom.degree % maxDegree) + 1);
 		}
+		tmp = tmp->pNext;
 	}
+	currentPartOfLink->pNext = result.pFirst;
 	return result;
 }
 
@@ -518,24 +536,33 @@ string TPolinom::PolinomToString()
 	for (int i = 0; i < count; i++)
 	{
 		if (tmp->monom.coef != 1)
-			str+=tmp->monom.coef;
+			str+= to_string(tmp->monom.coef);
 		if (tmp->monom.degree / (maxDegree*maxDegree) > 0)
 		{
 			str += "x";
 			if (tmp->monom.degree / (maxDegree*maxDegree) > 1)
-				str+=+tmp->monom.degree / (maxDegree*maxDegree);
+			{
+				str += "^";
+				str += to_string(tmp->monom.degree / (maxDegree*maxDegree));
+			}
 		}
 		if (tmp->monom.degree / maxDegree % maxDegree > 0)
 		{
 			str += "y";
 			if (tmp->monom.degree / maxDegree % maxDegree > 1)
-				str+=(tmp->monom.degree / maxDegree % maxDegree);
+			{
+				str += "^";
+				str += to_string(tmp->monom.degree / maxDegree % maxDegree);
+			}
 		}
 		if (tmp->monom.degree % maxDegree > 0)
 		{
 			str += "z";
 			if (tmp->monom.degree % maxDegree > 1)
-				str+=tmp->monom.degree % maxDegree;
+			{
+				str += "^";
+				str += to_string(tmp->monom.degree % maxDegree);
+			}
 		}
 		tmp = tmp->pNext;
 		if (tmp->monom.coef != 0)

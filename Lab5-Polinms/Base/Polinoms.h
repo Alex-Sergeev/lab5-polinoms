@@ -21,7 +21,6 @@ class TPolinom
 {
 	TLink* pFirst;
 	static int maxDegree;
-	int elemCount;
 
 	void SortByMaxDegree();
 
@@ -29,6 +28,7 @@ public:
 	TPolinom();
 	TPolinom(char* strch);
 	TPolinom(string str);
+	TPolinom(const TPolinom &polinom);
 	~TPolinom();
 
 	static void SetMaxDegree(unsigned int var)
@@ -41,7 +41,8 @@ public:
 			throw("Степень должна быть кратна 10");
 	}
 	TPolinom operator+(const TPolinom &polinom);
-	TPolinom operator*(int var);
+	TPolinom operator*(double var);
+	TPolinom operator=(const TPolinom &polinom);
 	void ShowPolinom();
 	string PolinomToString();
 	int Calculate(int x, int y, int z);           // решение полинома по введённым числам

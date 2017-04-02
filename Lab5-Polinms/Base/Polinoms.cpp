@@ -622,9 +622,9 @@ string TPolinom::PolinomToString()
 		tmp = tmp->pNext;
 		count++;
 	}
-	if (count == 0)
+	if (count = 0)
 	{
-		str == "0";
+		str = "0";
 		return str;
 	}
 	tmp = this->pFirst;

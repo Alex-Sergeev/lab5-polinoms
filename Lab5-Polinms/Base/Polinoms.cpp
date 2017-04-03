@@ -302,6 +302,7 @@ void TPolinom::SortByMaxDegree()
 	TLink* lastPointer;
 	TLink* maxPointer;
 	TLink* Pointer;
+	TLink* tmpDel;
 	int count = 0;
 	tmp = this->pFirst;
 	tmp = tmp->pNext;
@@ -341,6 +342,24 @@ void TPolinom::SortByMaxDegree()
 			tmp->pNext = maxPointer;
 		}
 		start++;
+	}
+	tmp = this->pFirst;
+	lastPointer = tmp;
+	tmp = tmp->pNext;
+	for (int j = 0; j < count; j++)
+	{
+		if (tmp->monom.coef == 0)
+		{
+			lastPointer->pNext = tmp->pNext;
+			tmpDel = tmp;
+			tmp = tmp->pNext;
+			delete tmpDel;
+		}
+		else
+		{
+			lastPointer = tmp;
+			tmp = tmp->pNext;
+		}
 	}
 }
 
@@ -470,12 +489,12 @@ void TPolinom::ShowPolinom()
 	cout << endl;
 }
 
-int TPolinom::Calculate(int x, int y, int z)
+double TPolinom::Calculate(double x, double y, double z)
 {
 	TLink *tmp = this->pFirst;
-	int count = 0;
-	int res = 0;
-	int tmpint;
+	double count = 0;
+	double res = 0;
+	double tmpint;
 	tmp = tmp->pNext;
 	while (tmp->monom.degree != -1)
 	{

@@ -45,7 +45,7 @@ public:
 	TPolinom operator=(const TPolinom &polinom);
 	void ShowPolinom();
 	string PolinomToString();
-	int Calculate(int x, int y, int z);           // решение полинома по введённым числам
+	double Calculate(double x, double y, double z);           // решение полинома по введённым числам
 	TPolinom Differentiate(int difVar);         // дифферинцирование
 	TPolinom Integrate(int integrVar);          // интегрирование
 };

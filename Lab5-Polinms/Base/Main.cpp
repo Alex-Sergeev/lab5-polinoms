@@ -10,12 +10,12 @@ int main()
 	setlocale(LC_ALL, "Russian");
 	string strIn;
 	unsigned int degree;
-	int x, y, z;
+	double x, y, z;
 	TPolinom TPolArray[50];
 	int choice;
 	int choice2;
 	int choice3;
-	int resultCalculate;
+	double resultCalculate;
 	int currentAmountOfPolinoms = 1;
 	cout << "                       Лабораторная работа №5" << endl;
 	cout << "                               Полиномы" << endl;
@@ -64,7 +64,10 @@ int main()
 			cout << "Введите индекс выводимого полинома" << endl;
 			cin >> choice2;
 			if ((choice2 < 0) || (choice2 >= currentAmountOfPolinoms))
+			{
+				cout << "Неверный индекс полинома" << endl;
 				break;
+			}
 			cout << "Полином: ";
 			TPolArray[choice2].ShowPolinom();
 			break;
@@ -84,12 +87,18 @@ int main()
 		case 4:
 			cout << "Введите индекс 1 складываемого полинома" << endl;
 			cin >> choice2;
+			if ((choice2 < 0) || (choice2 >= currentAmountOfPolinoms))
+			{
+				cout << "Неверный индекс полинома" << endl;
+				break;
+			}
 			cout << "Введите индекс 2 складываемого полинома" << endl;
 			cin >> choice3;
-			if ((choice2 < 0) || (choice2 >= currentAmountOfPolinoms))
-				break;
 			if ((choice3 < 0) || (choice3 >= currentAmountOfPolinoms))
+			{
+				cout << "Неверный индекс полинома" << endl;
 				break;
+			}
 			result = TPolArray[choice2] + TPolArray[choice3];
 			cout << "Получившийся полином: ";
 			result.ShowPolinom();
@@ -109,7 +118,10 @@ int main()
 			cout << "Введите индекс умножаемого полинома:" << endl;
 			cin >> choice3;
 			if ((choice3 < 0) || (choice3 >= currentAmountOfPolinoms))
+			{
+				cout << "Неверный индекс полинома" << endl;
 				break;
+			}
 			result = TPolArray[choice3] * choice2;
 			cout << "Получившийся полином: ";
 			result.ShowPolinom();
@@ -127,11 +139,17 @@ int main()
 			cout << "Введите индекс дифферинцируемого полинома" << endl;
 			cin >> choice2;
 			if ((choice2 < 0) || (choice2 >= currentAmountOfPolinoms))
+			{
+				cout << "Неверный индекс полинома" << endl;
 				break;
+			}
 			cout << "Введите по какой переменной ведётся дифферинцирование 1.x 2.y 3.z" << endl;
 			cin >> choice3;
 			if ((choice3 < 1) || (choice3 > 3))
+			{
+				cout << "Неверный ввод" << endl;
 				break;
+			}
 			result = TPolArray[choice2].Differentiate(choice3);
 			cout << "Получившийся полином: ";
 			result.ShowPolinom();
@@ -149,11 +167,17 @@ int main()
 			cout << "Введите индекс интегрируемого полинома" << endl;
 			cin >> choice2;
 			if ((choice2 < 0) || (choice2 >= currentAmountOfPolinoms))
+			{
+				cout << "Неверный индекс полинома" << endl;
 				break;
+			}
 			cout << "Введите по какой переменной ведётся интегрирование 1.x 2.y 3.z" << endl;
 			cin >> choice3;
 			if ((choice3 < 1) || (choice3 > 3))
+			{
+				cout << "Неверный ввод" << endl;
 				break;
+			}
 			result = TPolArray[choice2].Integrate(choice3);
 			cout << "Получившийся полином: ";
 			result.ShowPolinom();
@@ -168,10 +192,13 @@ int main()
 			}
 			break;
 		case 8:
-			cout << "Введите индекс полинома для вычесления:" << endl;
+			cout << "Введите индекс полинома для вычисления:" << endl;
 			cin >> choice2;
 			if ((choice2 < 0) || (choice2 >= currentAmountOfPolinoms))
+			{
+				cout << "Неверный индекс полинома" << endl;
 				break;
+			}
 			TPolArray[choice2].ShowPolinom();
 			cout << "Введите х:" << endl;
 			cin >> x;

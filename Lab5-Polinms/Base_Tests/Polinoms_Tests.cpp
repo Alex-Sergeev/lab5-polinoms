@@ -37,7 +37,7 @@ TEST(Polinoms, can_calculate)
 	TPolinom::SetMaxDegree(10);
 	TPolinom polin(str);
 
-	EXPECT_EQ(9,polin.Calculate(1,2,0)) ;
+	EXPECT_EQ(9.0,polin.Calculate(1,2,0)) ;
 }
 
 TEST(Polinoms, can_summ_2_polinoms)
